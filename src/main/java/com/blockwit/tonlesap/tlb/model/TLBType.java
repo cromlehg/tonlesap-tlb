@@ -5,32 +5,27 @@ import com.blockwit.tonlesap.tlb.parser.TLBLex;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TLBType {
+public class TLBType extends TLBModel {
 
     public String name;
 
-    public List<TLBLex> lexes = new ArrayList<TLBLex>();
+    public List<TLBSubtype> subtypes = new ArrayList<TLBSubtype>();
 
     public TLBType(String name) {
         this.name = name;
     }
 
     @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer(name + " {");
-
-        if (!lexes.isEmpty())
+    public String toString(String identString, String identInc) {
+        StringBuffer sb = new StringBuffer(identString + name + "[");
+        if (!subtypes.isEmpty()) {
             sb.append("\n");
-
-        for (TLBLex lex : lexes) {
-            int idx = lex.value.lastIndexOf('=');
-            String expr = lex.value.substring(0, idx).replace('\n', ' ').replace('\t', ' ').replaceAll(" +", " ").trim();
-            sb.append("\t");
-            sb.append(expr);
-            sb.append("\n");
+            String nextIdent = identString + identInc;
+            for (int i = 0; i < subtypes.size(); i++) {
+                sb.append(subtypes.get(i).toString(nextIdent, identInc) + "\n");
+            }
         }
-
-        sb.append("}");
+        sb.append(identString + "]");
         return sb.toString();
     }
 

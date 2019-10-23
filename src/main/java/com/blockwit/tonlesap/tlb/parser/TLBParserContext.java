@@ -12,7 +12,9 @@ public class TLBParserContext {
 
     public int index = 0;
 
-    public TLB tlb;
+    public String error;
+
+    public TLB tlb = new TLB();
 
 }
 

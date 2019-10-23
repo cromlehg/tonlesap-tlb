@@ -5,6 +5,8 @@ import java.util.List;
 
 public class TLBLex {
 
+    public static final String identConst = "  ";
+
     public int startLine;
 
     public int endLine;
@@ -19,19 +21,58 @@ public class TLBLex {
 
     public List<TLBLex> childs = new ArrayList<TLBLex>();
 
+    public TLBLex(String name) {
+        this.name = name;
+    }
+
     public TLBLex(int startLine, int endLine, int startIndex, int endIndex, String name, String value) {
+        this(name);
         this.startLine = startLine;
         this.endLine = endLine;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        this.name = name;
         this.value = value;
+    }
+
+    public void addChild(TLBLex lex) {
+        if (childs.isEmpty()) {
+            startLine = lex.startLine;
+            startIndex = lex.startIndex;
+        }
+
+        endLine = lex.endLine;
+        endIndex = lex.endIndex;
+
+        childs.add(lex);
     }
 
     @Override
     public String toString() {
-        return "LEX_" + name + "(" + startLine + ":" + startIndex + ", " + endLine + ":" + endIndex + ") = \"" + value
-                + "\"";
+        return toString(identConst, identConst);
+    }
+
+    public String toString(String prevIdent, String ident) {
+        return prevIdent + "LEX_" + name + "(" + startLine + ":" + startIndex + ", " + endLine + ":" + endIndex + ") = " + valueToString(prevIdent, ident);
+    }
+
+    public String valueToString(String prevIdent, String ident) {
+        if (childs.isEmpty()) {
+            if (value == null)
+                return "null";
+            else if (value.equals("\n"))
+                return "\"\\n\"";
+            else
+                return "\"" + value + "\"";
+        } else {
+            StringBuffer sb = new StringBuffer("[\n");
+            String nextIdent = prevIdent + ident;
+            for (int i = 0; i < childs.size(); i++) {
+                sb.append(childs.get(i).toString(nextIdent, ident) + "\n");
+            }
+
+            sb.append(prevIdent + "]");
+            return sb.toString();
+        }
     }
 
 }
