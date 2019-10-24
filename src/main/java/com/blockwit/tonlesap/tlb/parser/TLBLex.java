@@ -46,6 +46,20 @@ public class TLBLex {
         childs.add(lex);
     }
 
+    public String getText() {
+        if (value == null) {
+
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < childs.size(); i++) {
+                if (i > 0)
+                    sb.append(" ");
+                sb.append(childs.get(i).getText());
+            }
+            return sb.toString();
+        } else
+            return value;
+    }
+
     @Override
     public String toString() {
         return toString(identConst, identConst);
